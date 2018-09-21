@@ -35,11 +35,13 @@ class JSONParser {
      */
     fun <T> getAsArray(path: String, objectHierarchy: Map<String, Any>): ArrayList<T>? {
         if (path.contains('/')) {
-            val path = path.split("/")
+            val elements = path.split("/")
             var root = objectHierarchy
-            for (element in path) {
-                if (path.last() == element)
+            for (element in elements) {
+                if (elements.last() == element)
+                    @Suppress("UNCHECKED_CAST")
                     return root[element] as ArrayList<T>
+                @Suppress("UNCHECKED_CAST")
                 root = root[element] as LinkedHashMap<String, Any>
             }
         }
@@ -51,38 +53,38 @@ class JSONParser {
      * Get an object at a specific [path]
      * @return Any?
      */
-    fun getObject(name: String, objectHierarchy: Map<String, Any>): Any? {
-        if (name.contains('/')) {
-            val path = name.split("/")
+    fun getObject(path: String, objectHierarchy: Map<String, Any>): Any? {
+        if (path.contains('/')) {
+            val elements = path.split("/")
             var root = objectHierarchy
-            for (element in path) {
-                if (path.last() == element)
+            for (element in elements) {
+                if (elements.last() == element)
                     return root[element]
                 @Suppress("UNCHECKED_CAST")
                 root = root[element] as LinkedHashMap<String, Any>
             }
         }
-        return objectHierarchy[name]
+        return objectHierarchy[path]
     }
 
     /**
      * Get Map at a specific [path]
      * @return LinkedHashMap<String, T>
      */
-    fun <T> getMap(name: String, objectHierarchy: Map<String, Any>): LinkedHashMap<String, T>? {
-        if (name.contains('/')) {
-            val path = name.split("/")
+    fun <T> getMap(path: String, objectHierarchy: Map<String, Any>): LinkedHashMap<String, T>? {
+        if (path.contains('/')) {
+            val elements = path.split("/")
             var root = objectHierarchy
-            for (element in path) {
-                if (path.last() == element)
-                    return root[element] as? LinkedHashMap<String, T>
+            for (element in elements) {
+                if (elements.last() == element)
                     @Suppress("UNCHECKED_CAST")
+                    return root[element] as LinkedHashMap<String, T>
                 @Suppress("UNCHECKED_CAST")
                 root = root[element] as LinkedHashMap<String, Any>
             }
         }
         @Suppress("UNCHECKED_CAST")
-        return objectHierarchy[name] as? LinkedHashMap<String, T>
+        return objectHierarchy[path] as LinkedHashMap<String, T>
     }
 
     /**
@@ -160,6 +162,7 @@ class JSONParser {
         if (t == JSONRIGHTBRACKET) {
             return Pair(result, tokens.subList(1, tokens.size))
         }
+
         while (true) {
             val jsonTokens = internalParse(tokens)
             tokens = jsonTokens.second
@@ -170,8 +173,6 @@ class JSONParser {
             else
                 tokens = tokens.subList(1, tokens.size)
         }
-
-        throw Exception("Expected end of array")
     }
 
     private fun parseObject(ptokens: MutableList<Any>): Pair<Any, MutableList<Any>> {
