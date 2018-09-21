@@ -25,6 +25,7 @@ class JSONParser {
     fun parse(json: String): Map<String, Any> {
         val lexList = this.lex(json)
         val result: Pair<Any, MutableList<Any>> = internalParse(lexList)
+        @Suppress("UNCHECKED_CAST")
         return result.first as Map<String, Any>
     }
 
@@ -42,6 +43,7 @@ class JSONParser {
                 root = root[element] as LinkedHashMap<String, Any>
             }
         }
+        @Suppress("UNCHECKED_CAST")
         return objectHierarchy[path] as ArrayList<T>
     }
 
@@ -56,6 +58,7 @@ class JSONParser {
             for (element in path) {
                 if (path.last() == element)
                     return root[element]
+                @Suppress("UNCHECKED_CAST")
                 root = root[element] as LinkedHashMap<String, Any>
             }
         }
@@ -73,9 +76,12 @@ class JSONParser {
             for (element in path) {
                 if (path.last() == element)
                     return root[element] as? LinkedHashMap<String, T>
+                    @Suppress("UNCHECKED_CAST")
+                @Suppress("UNCHECKED_CAST")
                 root = root[element] as LinkedHashMap<String, Any>
             }
         }
+        @Suppress("UNCHECKED_CAST")
         return objectHierarchy[name] as? LinkedHashMap<String, T>
     }
 
