@@ -1,5 +1,8 @@
 # MXRJsonParser
-##Lexical analysis
+
+This is a simple JSON parser for learning purposes. Do you ever wanted to discover how to write a JSON parser? Here is an example.
+
+## Lexical analysis
 Lexical analysis breaks down an input string into tokens. Comments and whitespace are discarded during lexical analysis.
 
 In a simple lexical analyzer, you iterate over all the characters in an input string and break them apart into fundemental language constructs such as integers, strings,etc. In particular, strings must be part of the lexical analysis because you cannot throw away whitespace without knowing that it is not part of a string.
@@ -19,7 +22,7 @@ The lexer produces the following array:
 
 Special characters (' ', '\t', '\b', '\n', '\r') are excluded.
 
-##Parsing
+## Parsing
 After the lexer produces this simple array, comes the interesting part, the parsing. A key structural difference between this lexer and parser is that the lexer returns a one-dimensional array of tokens. Parsers are often defined recursively and returns a recursive, tree-like object.
 Parsing objects is a matter of parsing a key-value pair internally separated by a colon and externally separated by a comma until you reach the end of the object.
 This is done in:
@@ -31,7 +34,7 @@ Parsing arrays is a matter of parsing array members and expecting a comma token 
 private fun parseArray(ptokens: MutableList<Any>): Pair<Any, MutableList<Any>> 
 ```
 
-##Getting the results
+## Getting the results
 Result can be a String, Integer, Map and other objects at specific path. let's take this simple json:
 
 ```{
