@@ -20,13 +20,19 @@ class JSONParser {
 
     /**
      * Parses the [json] string
+     *
      * @return Map of string keys and elements
      */
-    fun parse(json: String): Map<String, Any> {
+    fun parse(json: String): Any { //Map<String, Any> 
         val lexList = this.lex(json)
         val result: Pair<Any, MutableList<Any>> = internalParse(lexList)
-        @Suppress("UNCHECKED_CAST")
-        return result.first as Map<String, Any>
+        if (result.first is ArrayList<*>) {
+            return result.first as ArrayList<*>
+        }
+        else {
+            @Suppress("UNCHECKED_CAST")
+            return result.first as Map<String, Any>
+        }
     }
 
     /**
@@ -71,7 +77,7 @@ class JSONParser {
      * Get Map at a specific [path]
      * @return LinkedHashMap<String, T>
      */
-    fun <T> getMap(path: String, objectHierarchy: Map<String, Any>): LinkedHashMap<String, T>? {
+    private fun <T> getMap(path: String, objectHierarchy: Map<String, Any>): LinkedHashMap<String, T>? {
         if (path.contains('/')) {
             val elements = path.split("/")
             var root = objectHierarchy
