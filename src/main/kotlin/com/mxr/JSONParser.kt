@@ -1,10 +1,8 @@
 package com.mxr
 
 /**
-Simple JSONParser example
-TODO: Fix for unchecked casts
+ * Simple JSONParser example
  */
-
 class JSONParser {
 
     private val JSONQUOTE = '"'
@@ -23,9 +21,13 @@ class JSONParser {
      *
      * @return Map of string keys and elements
      */
-    fun parse(json: String): Any { //Map<String, Any> 
+    fun parse(json: String): Any {
         val lexList = this.lex(json)
-        val result: Pair<Any, MutableList<Any>> = internalParse(lexList)
+//        println("lexer finished")
+//        for (s in lexList) {
+//            println("'$s'")
+//        }
+        val result: Pair<Any, List<Any>> = internalParse(lexList)
         if (result.first is ArrayList<*>) {
             return result.first as ArrayList<*>
         }
@@ -93,6 +95,7 @@ class JSONParser {
 
     /**
      * Lexical analysis
+     *
      * Lexical analysis breaks source input into the simplest decomposable elements
      * of a language. These are the "tokens".
      */
@@ -162,9 +165,9 @@ class JSONParser {
     }
 
     /**
-     *
+     * Parse the result of the lex for array or object
      */
-    private fun internalParse(tokens: MutableList<Any>): Pair<Any, MutableList<Any>> {
+    private fun internalParse(tokens: List<Any>): Pair<Any, List<Any>> {
         val token: Any = tokens[0]
         when (token) {
             JSONLEFTBRACKET -> return parseArray(tokens.subList(1, tokens.size))
@@ -178,10 +181,14 @@ class JSONParser {
         return Pair(token, tokens.subList(1, tokens.size))
     }
 
-    private fun parseArray(ptokens: MutableList<Any>): Pair<Any, MutableList<Any>> {
+    /**
+     * Parse for array
+     */
+    private fun parseArray(ptokens: List<Any>): Pair<Any, List<Any>> {
         val result = mutableListOf<Any>()
         var tokens = ptokens
         var t = tokens[0]
+
         if (t == JSONRIGHTBRACKET) {
             return Pair(result, tokens.subList(1, tokens.size))
         }
@@ -198,8 +205,8 @@ class JSONParser {
         }
     }
 
-    private fun parseObject(ptokens: MutableList<Any>): Pair<Any, MutableList<Any>> {
-        var tokens: MutableList<Any> = ptokens
+    private fun parseObject(ptokens: List<Any>): Pair<Any, List<Any>> {
+        var tokens: List<Any> = ptokens
         val resultObject = mutableMapOf<Any, Any>()
         var t = tokens[0]
         if (t == JSONRIGHTBRACE) {
@@ -219,7 +226,8 @@ class JSONParser {
             t = tokens[0]
             if (t == JSONRIGHTBRACE) {
                 return Pair(resultObject, tokens.subList(1, tokens.size))
-            } else if (t != JSONCOMMA)
+            }
+            else if (t != JSONCOMMA)
                 throw Exception("Expected comma after element: '$t'")
             tokens = tokens.subList(1, tokens.size)
         }
