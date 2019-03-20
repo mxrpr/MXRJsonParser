@@ -96,34 +96,35 @@ class JSONParser {
      * Lexical analysis breaks source input into the simplest decomposable elements
      * of a language. These are the "tokens".
      */
-    private fun lex(json: String): MutableList<Any> {
+    private fun lex(json: String): List<Any> {
         val tokens = mutableListOf<Any>()
         var str = json
         var value = ""
 
         while (!str.isEmpty()) {
-            if (str[0] in JSONSYNTAX) {
-                if (!value.isEmpty()) {
-                    tokens.add(value)
-                    value = ""
+            when(str[0]) {
+                in JSONSYNTAX -> {
+                    if (!value.isEmpty()) {
+                        tokens.add(value)
+                        value = ""
+                    }
+                    tokens.add(str[0])
+                    str = str.substring(1)
                 }
-                tokens.add(str[0])
-                str = str.substring(1)
-                continue
+                JSONQUOTE -> {
+                    val result = getString(str.substring(1))
+                    str = result.second //remaining string
+                    tokens.add(result.first)
+                }
+                in JSONWHITESPACE -> {
+                    str = str.substring(1)
+                }
+                else -> {
+                    val result = this.getValue(str)
+                    str = result.second //remaining string
+                    tokens.add(result.first)
+                }
             }
-            if (str[0] == JSONQUOTE) {
-                val result = getString(str.substring(1))
-                str = result.second
-                tokens.add(result.first)
-                continue
-            }
-            if (str[0] in JSONWHITESPACE) {
-                str = str.substring(1)
-                continue
-            }
-
-            value += str[0]
-            str = str.substring(1)
         }
         println(tokens)
         return tokens
