@@ -130,16 +130,34 @@ class JSONParser {
         return tokens
     }
 
+    private fun getValue(str: String) : Pair<String, String> {
+        var result: String = ""
+        for (c in str) {
+            //TODO check for '\{"'
+            if (c in JSONSYNTAX) {
+                break
+            } else
+                result += c
+        }
+        return Pair(result, str.substring(result.length))
+    }
 
+    /**
+     * Get the string till the next quote
+     *
+     * @return a pair of the found string and the rest of the parsed string
+     */
     private fun getString(str: String): Pair<String, String> {
         var result = ""
         for (c in str) {
+            //TODO check for '\{"'
             if (c == JSONQUOTE) {
                 break
             } else
                 result += c
         }
 
+        // return with the string and the remaining string
         return Pair(result, str.substring(result.length + 1))
     }
 
