@@ -59,18 +59,16 @@ class JSONParser {
      * Get an object at a specific [path]
      * @return Any?
      */
-    fun getObject(path: String, objectHierarchy: Map<String, Any>): Any? {
-        if (path.contains('/')) {
-            val elements = path.split("/")
-            var root = objectHierarchy
-            for (element in elements) {
-                if (elements.last() == element)
-                    return root[element]
-                @Suppress("UNCHECKED_CAST")
-                root = root[element] as LinkedHashMap<String, Any>
+    fun <T> getObject(path: String, objectHierarchy: Map<String, Any>, classType: T): T {
+        val elements = path.split("/")
+        var value : Any? = objectHierarchy
+        for (element in elements) {
+            when(value) {
+                is Map<*,*> -> value = value[element]
             }
         }
-        return objectHierarchy[path]
+
+        return value as T
     }
 
     /**
