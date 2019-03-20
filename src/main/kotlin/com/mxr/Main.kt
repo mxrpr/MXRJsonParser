@@ -2,7 +2,6 @@
 package com.mxr
 
 import java.io.File
-import java.lang.reflect.AnnotatedArrayType
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
