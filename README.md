@@ -55,12 +55,20 @@ Result can be a String, Integer, Map and other objects at specific path. let's t
 }
 ```
 
-At path "object/object/object_string" there is a string. How we can get it? This simpe method shows how to get an Object, a Map or array:
+How we can get values from the parsed JSON. With the help of the JSONObject, we can get the values from different path.
 
 ```
-fun getObject(name: String, objectHierarchy: Map<String, Any>): Any?
-fun <T> getMap(name: String, objectHierarchy: Map<String, Any>): LinkedHashMap<String, T>?
-fun <T> getAsArray(path: String, objectHierarchy: Map<String, Any>): ArrayList<T>?
+
+        val parser = MJSONParser()
+        try {
+            val result:MJSONObject = parser.parse(json)
+            val string = result.getString("string_value")
+            val boolean: Boolean = result.getBoolean("bool_value")
+            val int: Int = result.getInt("int_value")
+            val array:MJSONArray = result.getArray("array_value")
+        }catch(e: Exception) {
+            -----
+        }
 ```
 
 ## How can you test it?
