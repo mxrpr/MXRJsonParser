@@ -33,6 +33,8 @@ class MJSONParser {
      *
      * Lexical analysis breaks source input into the simplest decomposable elements
      * of a language. These are the "tokens".
+     *
+     * @return List of tokens
      */
     private fun lex(json: String): List<Any> {
         val tokens = mutableListOf<Any>()
@@ -68,6 +70,13 @@ class MJSONParser {
         return tokens
     }
 
+    /**
+     * Reads a value from the string. The content is the string till
+     * a character from JSONSyntax is found
+     *
+     * @return Pair, where the first element is the found string, the
+     * second element is the rest of the string
+     */
     private fun getValue(str: String) : Pair<String, String> {
         var result: String = ""
         for (c in str) {
@@ -101,6 +110,8 @@ class MJSONParser {
 
     /**
      * Parse the result of the lex for array or object
+     *
+     * @return pair of token and the remaining tokens
      */
     private fun internalParse(tokens: List<Any>): Pair<Any, List<Any>> {
         val token: Any = tokens[0]
@@ -117,7 +128,10 @@ class MJSONParser {
     }
 
     /**
-     * Parse for array
+     * Parse given string for array
+     *
+     * @return Pair, first element is the array itself, second element is
+     * the list of the remaining tokens
      */
     private fun parseArray(ptokens: List<Any>): Pair<Any, List<Any>> {
         val result = mutableListOf<Any>()
@@ -140,6 +154,12 @@ class MJSONParser {
         }
     }
 
+    /**
+     * Parse given string for object
+     *
+     * @return Pair, first element is the object itself, second element is
+     * the list of the remaining tokens
+     */
     private fun parseObject(ptokens: List<Any>): Pair<Any, List<Any>> {
         var tokens: List<Any> = ptokens
         val resultObject = mutableMapOf<Any, Any>()
