@@ -67,16 +67,15 @@ fun <T> getAsArray(path: String, objectHierarchy: Map<String, Any>): ArrayList<T
 
 ```
 fun main(str: Array<String>) {
-    val jsonParser = JSONParser()
-    if (!File("test.json").exists()) {
-        throw Exception ("JSON file does not exists!!")
-    }
-    val content = File("test.json").readText()
-    val result = jsonParser.parse(content)
-
-    println("${jsonParser.getAsArray<Int>("array", result)}")
-    println(result["object"]!!.javaClass.name)
-    println("${jsonParser.getObject("object/object_string", result)}")
-    println("${jsonParser.getObject("object/object/object_string", result)}")
+     val json = "{\"int_value\" : [1,2,4,5]}"
+        val parser = MJSONParser()
+        try {
+            val result = parser.parse(json)
+            val array = result.getArray("int_value")
+            println(array.getInt(0))
+            println(array.getInt(3))
+        }catch(e: Exception) {
+           ------
+        }
 }
 ```
