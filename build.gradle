@@ -21,10 +21,13 @@ repositories {
 
 dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
   testCompile 'junit:junit:4.11'
   testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
-task runExample(type: JavaExec) {
-  main = 'com.mxr.JSONParserExample'
-  classpath = sourceSets.main.runtimeClasspath
+
+test {
+  afterTest { desc, result ->
+    logger.quiet "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+  }
 }
