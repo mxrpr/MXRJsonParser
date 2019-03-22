@@ -3,7 +3,7 @@ package com.mxr
 /**
  * Simple JSONParser example
  */
-class JSONParser {
+class MJSONParser {
 
     private val JSONQUOTE = '"'
     private val JSONWHITESPACE = arrayListOf(' ', '\t', '\b', '\n', '\r')
@@ -21,76 +21,11 @@ class JSONParser {
      *
      * @return Map of string keys and elements
      */
-    fun parse(json: String): Any {
+    fun parse(json: String): MJSONObject {
         val lexList = this.lex(json)
-//        println("lexer finished")
-//        for (s in lexList) {
-//            println("'$s'")
-//        }
         val result: Pair<Any, List<Any>> = internalParse(lexList)
-        if (result.first is ArrayList<*>) {
-            return result.first as ArrayList<*>
-        }
-        else {
-            @Suppress("UNCHECKED_CAST")
-            return result.first as Map<String, Any>
-        }
-    }
 
-    /**
-     * Get value at a specific [path]
-     * @return ArrayList<T>?
-     */
-    fun <T> getAsArray(path: String, objectHierarchy: Map<String, Any>): ArrayList<T>? {
-        if (path.contains('/')) {
-            val elements = path.split("/")
-            var root = objectHierarchy
-            for (element in elements) {
-                if (elements.last() == element)
-                    @Suppress("UNCHECKED_CAST")
-                    return root[element] as ArrayList<T>
-                @Suppress("UNCHECKED_CAST")
-                root = root[element] as LinkedHashMap<String, Any>
-            }
-        }
-        @Suppress("UNCHECKED_CAST")
-        return objectHierarchy[path] as ArrayList<T>
-    }
-
-    /**
-     * Get an object at a specific [path]
-     * @return Any?
-     */
-    fun <T> getObject(path: String, objectHierarchy: Map<String, Any>, classType: T): T {
-        val elements = path.split("/")
-        var value : Any? = objectHierarchy
-        for (element in elements) {
-            when(value) {
-                is Map<*,*> -> value = value[element]
-            }
-        }
-
-        return value as T
-    }
-
-    /**
-     * Get Map at a specific [path]
-     * @return LinkedHashMap<String, T>
-     */
-    private fun <T> getMap(path: String, objectHierarchy: Map<String, Any>): LinkedHashMap<String, T>? {
-        if (path.contains('/')) {
-            val elements = path.split("/")
-            var root = objectHierarchy
-            for (element in elements) {
-                if (elements.last() == element)
-                    @Suppress("UNCHECKED_CAST")
-                    return root[element] as LinkedHashMap<String, T>
-                @Suppress("UNCHECKED_CAST")
-                root = root[element] as LinkedHashMap<String, Any>
-            }
-        }
-        @Suppress("UNCHECKED_CAST")
-        return objectHierarchy[path] as LinkedHashMap<String, T>
+        return MJSONObject(result.first)
     }
 
     /**
